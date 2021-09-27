@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <table style="border: 1px solid gray; border-collapse: collapse; width: 300px;margin-left: 5px;">
+        <tr>
+            <th>Username</th>
+            <th>NTRIP ID</th>
+            <th>GPS Status</th>
+
+        </tr>
+      
+        <tbody id="data">
+
+        </tbody>
+    </table>
+    <script>
+        //call ajax
+        var ajax = new XMLHttpRequest();
+        var method = "GET";
+        var URL = "fetch.php";
+        var asynchronous = true;
+
+        ajax.open(method, URL, asynchronous);
+        //sending ajax request
+        ajax.send();
+
+        //receiving response from fetch.php
+        ajax.onreadystatechange = function() {
+            
+            if (this.readyState == 4 && this.status == 200) {
+                //for debugging
+                //alert(this.responseText);
+
+                //converting JSON into array
+                var data = JSON.parse(this.responseText);
+                console.log(data);//for debugging
+
+                //html value for the tbody
+                var html = '';
+
+                //looping through the data
+                for (let i = 0; i < data.length; i++) {
+                    var username = data[i].username;
+                    var ntripId = data[i].ntrip_id;
+                    var gps_status = data[i].GPS_status;
+                    
+                    //appending in html
+                    html += "<tr>";
+                        html+= "<td>"+username+ "</td>";
+                        html+= "<td>"+ntripId+ "</td>";
+                        html+= "<td>"+gps_status+ "</td>";
+                    html += "</tr>";
+                }
+                //replacing tbody of table 
+                document.getElementById("data").innerHTML = html;
+            }
+        }
+    </script>
+</body>
+</html>
